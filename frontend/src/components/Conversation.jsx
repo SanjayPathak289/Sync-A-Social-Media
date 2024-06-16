@@ -9,7 +9,6 @@ const Conversation = ({ isOnline, conversation }) => {
     const user = conversation.participants[0];
     const lastMessage = conversation.lastMessage;
     const currentUser = useRecoilValue(userAtom);
-    const colorMode = useColorMode();
     const [selectedConversation, setSelectedConversation] = useRecoilState(selectedConversationAtom);
     return (
         <Flex gap={4} alignItems={"center"} px={2} py={3} my={1}
@@ -49,7 +48,7 @@ const Conversation = ({ isOnline, conversation }) => {
                             <BsCheck2All size={16} />
                         </Box>
                     ) : ""}
-                    {lastMessage.text.length > 18 ? lastMessage.text.substring(0, 18) + "..." : lastMessage.text || <BsFillImageFill size={16} />}
+                    {lastMessage.text.length > 18 ? lastMessage.text.substring(0, 18) + "..." : lastMessage.text || (!conversation.mock && <BsFillImageFill size={16} />)}
                 </Box>
             </Stack>
         </Flex>

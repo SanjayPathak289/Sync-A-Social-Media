@@ -38,15 +38,16 @@ const MessageInput = ({ setMessages }) => {
             if (data.error) {
                 showToast("Error", data.error, "error");
             }
-            console.log(data);
             setMessageText("");
             setImgUrl("");
             setMessages((messages) => [...messages, data]);
+
             setConversations(prevConvers => {
                 const updatedConvers = prevConvers.map((conv) => {
                     if (conv._id === selectedConversation._id) {
                         return {
                             ...conv,
+                            mock: false,
                             lastMessage: {
                                 text: messageText,
                                 sender: data.sender

@@ -6,8 +6,8 @@ import useFollowUnfollow from '../hooks/useFollowUnfollow';
 const SuggestedUser = ({ user }) => {
     const { handleFollowUnfollow, loading, following } = useFollowUnfollow(user);
     return (
-        <Flex gap={2} justifyContent={"space-between"} alignItems={"center"}>
-            <Flex gap={2} as={Link} to={`${user.username}`}>
+        <Flex gap={2} justifyContent={"space-between"} alignItems={"center"} w={"inherit"}>
+            <Flex gap={2} as={Link} to={`/${user.username}`}>
                 <Avatar src={user.profilePic} />
                 <Box>
                     <Text fontSize={"sm"} fontWeight={"bold"}>

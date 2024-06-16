@@ -23,6 +23,16 @@ const getUserProfile = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 }
+const searchUser = async (req, res) => {
+    const { name } = req.params;
+    try {
+        const searchQuery = { username: { $regex: name, $options: 'i' } };
+        const userList = await User.find(searchQuery).select("-password").select("-updatedAt");
+        res.status(200).json(userList);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
 const getSuggestedUsers = async (req, res) => {
     try {
         const userId = req.user._id;
@@ -223,4 +233,4 @@ const getFollowersFollowing = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 }
-export { signupUser, loginUser, logoutUser, followUnfollowUser, updateUser, getUserProfile, getSuggestedUsers, disableUser, getFollowersFollowing };
+export { signupUser, loginUser, logoutUser, followUnfollowUser, updateUser, getUserProfile, getSuggestedUsers, disableUser, getFollowersFollowing, searchUser };

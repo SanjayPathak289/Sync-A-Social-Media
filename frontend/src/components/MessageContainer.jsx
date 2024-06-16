@@ -75,9 +75,13 @@ const MessageContainer = () => {
     }, [socket, currentUser._id, messages, selectedConversation]);
 
     useEffect(() => {
+
         const getMessages = async () => {
             try {
-                if (selectedConversation.mock) return;
+                if (selectedConversation.mock) {
+                    setMessages([]);
+                    return;
+                };
                 const res = await fetch(`/api/messages/${selectedConversation.userId}`)
                 const data = await res.json();
                 if (data.error) {
@@ -100,13 +104,13 @@ const MessageContainer = () => {
 
 
     return (
-        <Flex flex={70} bg={useColorModeValue("gray.200", "gray.dark")} borderRadius={"md"} flexDirection={"column"} p={2}>
+        <Flex flex={70} bg={useColorModeValue("gray.200", "gray.dark")} borderRadius={"md"} flexDirection={"column"} p={2} maxH={"700px"} justifyContent={"space-between"}>
             <Flex w={"full"} h={12} alignItems={"center"} gap={2}>
                 <Avatar src={selectedConversation.userProfilePic} size={"sm"} />
                 <Text display={"flex"} alignItems={"center"}>{selectedConversation.username} <Image src='/verified.png' w={4} h={4} ml={1} /></Text>
             </Flex>
             <Divider />
-            <Flex flexDirection={"column"} gap={4} my={4} h={"400px"} overflowY={"auto"} p={2}>
+            <Flex flexDirection={"column"} gap={4} my={4} maxH={"600px"} overflowY={"auto"} p={2}>
                 {loadingMessages && (
                     [0, 1, 2, 3, 4, 5, 6, 7].map((_, i) => (
                         <Flex key={i} gap={2} alignItems={"center"}

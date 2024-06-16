@@ -12,10 +12,10 @@ import CreatePost from "./components/CreatePost";
 import ChatPage from "./pages/ChatPage";
 import SettingsPage from "./pages/SettingsPage";
 import FollowQuery from "./components/FollowQuery";
+import SearchPage from "./pages/SearchPage";
 function App() {
   const user = useRecoilValue(userAtom);
   const { pathname } = useLocation();
-  console.log(user);
   return (
     <Box position={"relative"} w={"full"}>
       <Container maxW={pathname === '/' ? { "base": "620px", "md": "900px" } : "620px"}>
@@ -39,6 +39,7 @@ function App() {
           <Route path="/:username/:followQuery" element={<FollowQuery />} />
           <Route path="/chat" element={user ? <ChatPage /> : <Navigate to="/auth" />} />
           <Route path="/settings" element={user ? <SettingsPage /> : <Navigate to="/auth" />} />
+          <Route path="/search" element={<SearchPage />} />
         </Routes>
 
         {user && pathname === '/' && <CreatePost isTop={false} />}

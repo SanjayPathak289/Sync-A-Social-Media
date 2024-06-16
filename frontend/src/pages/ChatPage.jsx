@@ -59,6 +59,7 @@ const ChatPage = () => {
     }, [socket, setConversations])
     const handleSearch = async (e) => {
         e.preventDefault();
+        if (!searchText) return;
         setLoading(true);
         try {
             const res = await fetch(`/api/users/profile/${searchText}`);
