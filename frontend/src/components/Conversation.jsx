@@ -26,7 +26,8 @@ const Conversation = ({ isOnline, conversation }) => {
                 username: user.username,
                 mock: conversation.mock,
             })}
-            bg={selectedConversation._id === conversation._id ? (colorMode === "light" ? "gray.400" : "gray.dark") : ""}>
+            bg={selectedConversation._id === conversation._id ? (useColorModeValue("gray.600", "gray.dark")) : ""}
+            color={selectedConversation._id === conversation._id ? "white" : (useColorModeValue("black", "white"))}>
             <WrapItem>
                 <Avatar size={{
                     'base': "xs",

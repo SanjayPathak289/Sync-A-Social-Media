@@ -1,9 +1,11 @@
-import { Box, Button, Flex, FormControl, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, useDisclosure } from '@chakra-ui/react'
-import React, { useState } from 'react'
+import { Avatar, Box, Button, Flex, FormControl, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Skeleton, SkeletonCircle, SkeletonText, Spinner, Text, useDisclosure } from '@chakra-ui/react'
+import React, { useEffect, useState } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil';
 import userAtom from '../atoms/userAtom';
 import useShowToast from '../hooks/useShowToast';
 import postsAtom from '../atoms/postsAtom';
+import conversationsAtom from '../atoms/conversationsAtom';
+import { IoSendSharp } from "react-icons/io5"
 
 const Actions = ({ post }) => {
     const user = useRecoilValue(userAtom);
@@ -14,8 +16,6 @@ const Actions = ({ post }) => {
     const [isReplying, setIsReplying] = useState(false);
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [reply, setReply] = useState("");
-
-
     const handleLikeUnlike = async () => {
         if (!user) return showToast("Error", "Login first", "error");
         if (isLiking) return;
@@ -119,7 +119,15 @@ const Actions = ({ post }) => {
                     role='img'
                     viewBox='0 0 24 24'
                     width='20'
-                    onClick={onOpen}
+                    cursor={"pointer"}
+                    onClick={() => {
+                        if (user) {
+                            onOpen();
+                        }
+                        else {
+                            showToast("Error", "Please login!", "error");
+                        }
+                    }}
                 >
                     <title>Comment</title>
                     <path
@@ -130,9 +138,8 @@ const Actions = ({ post }) => {
                         strokeWidth='2'
                     ></path>
                 </svg>
-                <RepostSVG />
 
-                <ShareSVG />
+                <ShareSVG post={post} />
             </Flex>
             <Flex gap={2} alignItems={"center"}>
                 <Text color={"gray.light"} fontSize={"sm"}>{post.likes.length} likes</Text>
@@ -166,55 +173,150 @@ const Actions = ({ post }) => {
 export default Actions
 
 
-const RepostSVG = () => {
-    return (
-        <svg
-            aria-label='Repost'
-            color='currentColor'
-            fill='currentColor'
-            height='20'
-            role='img'
-            viewBox='0 0 24 24'
-            width='20'
-        >
-            <title>Repost</title>
-            <path
-                fill=''
-                d='M19.998 9.497a1 1 0 0 0-1 1v4.228a3.274 3.274 0 0 1-3.27 3.27h-5.313l1.791-1.787a1 1 0 0 0-1.412-1.416L7.29 18.287a1.004 1.004 0 0 0-.294.707v.001c0 .023.012.042.013.065a.923.923 0 0 0 .281.643l3.502 3.504a1 1 0 0 0 1.414-1.414l-1.797-1.798h5.318a5.276 5.276 0 0 0 5.27-5.27v-4.228a1 1 0 0 0-1-1Zm-6.41-3.496-1.795 1.795a1 1 0 1 0 1.414 1.414l3.5-3.5a1.003 1.003 0 0 0 0-1.417l-3.5-3.5a1 1 0 0 0-1.414 1.414l1.794 1.794H8.27A5.277 5.277 0 0 0 3 9.271V13.5a1 1 0 0 0 2 0V9.271a3.275 3.275 0 0 1 3.271-3.27Z'
-            ></path>
-        </svg>
-    )
-}
+const ShareSVG = ({ post }) => {
+    const { isOpen, onOpen, onClose } = useDisclosure();
+    const [conversations, setConversations] = useRecoilState(conversationsAtom);
+    const [loadingConversations, setLoadingConversations] = useState(true);
+    const [isSending, setIsSending] = useState(false);
+    const showToast = useShowToast();
+    const [selectedUser, setSelectedUser] = useState(null);
+    const user = useRecoilValue(userAtom);
 
-const ShareSVG = () => {
+    const getConversations = async () => {
+        if (!user) {
+            return showToast("Error", "Please login!", "error")
+        };
+        try {
+            const res = await fetch("/api/messages/conversations");
+            const data = await res.json();
+            if (data.error) {
+                showToast("Error", data.error, "error");
+                setConversations([]);
+                return;
+            }
+            setConversations(data);
+        } catch (error) {
+            setConversations([]);
+            showToast("Error", error.message, "error");
+        } finally {
+            setLoadingConversations(false);
+        }
+    }
+    const handleShare = async (e) => {
+        e.preventDefault();
+        if (isSending) return;
+        if (!user) return showToast("Error", "Login first", "error");
+        setIsSending(true);
+
+        try {
+            let userOfPost;
+            const resUser = await fetch(`/api/users/profile/${post.postedBy}`);
+            const dataUser = await resUser.json();
+            if (dataUser.error) {
+                showToast("Error", dataUser.error, "error");
+            }
+            userOfPost = dataUser.username;
+            const { protocol, host } = window.location;
+            const res = await fetch("/api/messages", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    message: `${protocol}//${host}/${userOfPost}/post/${post._id}`,
+                    img: "",
+                    recipientId: selectedUser.participants[0]._id
+                })
+            })
+            const data = await res.json();
+            if (data.error) {
+                showToast("Error", data.error, "error");
+            }
+            onClose();
+        } catch (error) {
+            showToast("Error", error.message, "error");
+        }
+        finally {
+            setIsSending(false);
+        }
+    }
     return (
-        <svg
-            aria-label='Share'
-            color=''
-            fill='rgb(243, 245, 247)'
-            height='20'
-            role='img'
-            viewBox='0 0 24 24'
-            width='20'
-        >
-            <title>Share</title>
-            <line
-                fill='none'
-                stroke='currentColor'
-                strokeLinejoin='round'
-                strokeWidth='2'
-                x1='22'
-                x2='9.218'
-                y1='3'
-                y2='10.083'
-            ></line>
-            <polygon
-                fill='none'
-                points='11.698 20.334 22 3.001 2 3.001 9.218 10.084 11.698 20.334'
-                stroke='currentColor'
-                strokeLinejoin='round'
-                strokeWidth='2'
-            ></polygon>
-        </svg>
+        <>
+            <svg
+                aria-label='Share'
+                color=''
+                fill='rgb(243, 245, 247)'
+                height='20'
+                role='img'
+                viewBox='0 0 24 24'
+                width='20'
+                cursor={"pointer"}
+                onClick={() => {
+                    getConversations();
+                    user && onOpen();
+                }}
+            >
+                <title>Share</title>
+                <line
+                    fill='none'
+                    stroke='currentColor'
+                    strokeLinejoin='round'
+                    strokeWidth='2'
+                    x1='22'
+                    x2='9.218'
+                    y1='3'
+                    y2='10.083'
+                ></line>
+                <polygon
+                    fill='none'
+                    points='11.698 20.334 22 3.001 2 3.001 9.218 10.084 11.698 20.334'
+                    stroke='currentColor'
+                    strokeLinejoin='round'
+                    strokeWidth='2'
+                ></polygon>
+            </svg>
+            <Modal isOpen={isOpen} onClose={() => {
+                onClose();
+                setSelectedUser(null);
+            }}>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Send</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                        <Flex w={"full"} flexWrap={"wrap"} gap={7}>
+
+                            {loadingConversations && [0, 1, 2, 3, 4].map((_, i) => (
+                                <Flex key={i} flexDirection={"column"} alignItems={"center"}>
+                                    <SkeletonCircle size={"16"} mb={2} />
+                                    <Skeleton w={"full"} h={5} />
+                                </Flex>
+                            ))}
+
+                            {!loadingConversations && conversations && conversations.map((conv) => (
+                                <Flex key={conv._id} flexDirection={"column"} alignItems={"center"} cursor={"pointer"} onClick={() => setSelectedUser(conv)}>
+                                    <Avatar src={conv.participants[0].profilePic} size={"lg"} border={selectedUser?._id === conv._id ? "3px solid black" : ""} />
+                                    <Text>{conv.participants[0].username}</Text>
+                                </Flex>
+                            ))}
+                        </Flex>
+                    </ModalBody>
+
+                    <ModalFooter>
+                        <Button colorScheme='blue' mr={3} onClick={() => {
+                            onClose();
+                            setSelectedUser(null);
+                        }}>
+                            Close
+                        </Button>
+                        {selectedUser && (
+                            isSending ? <Spinner size={"md"} ml={"50px"} /> : (
+                                <IoSendSharp size={24} cursor={"pointer"} style={{ marginLeft: "50px" }} onClick={handleShare} />
+                            )
+                        )}
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
+        </>
     )
 }

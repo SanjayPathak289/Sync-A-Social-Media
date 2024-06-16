@@ -1,4 +1,4 @@
-import { AlertDialog, AlertDialogBody, AlertDialogCloseButton, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Button, Text, useDisclosure } from '@chakra-ui/react'
+import { AlertDialog, AlertDialogBody, AlertDialogCloseButton, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Button, Flex, Text, useDisclosure } from '@chakra-ui/react'
 import React from 'react'
 import useShowToast from '../hooks/useShowToast';
 import useLogout from '../hooks/useLogout';
@@ -30,7 +30,8 @@ const SettingsPage = () => {
         }
     }
     return (
-        <>
+
+        <Flex flexDirection={"column"} alignItems={"center"} justifyContent={"center"}>
             <Text my={1} fontWeight={"bold"}>
                 Disable Your Account
             </Text>
@@ -38,7 +39,10 @@ const SettingsPage = () => {
             <Button
                 size={"sm"}
                 colorScheme='red'
-                onClick={onOpen}>Disable</Button>
+                onClick={onOpen}
+                marginTop={3}>
+                Disable
+            </Button>
             <AlertDialog
                 motionPreset='slideInBottom'
                 onClose={onClose}
@@ -62,7 +66,8 @@ const SettingsPage = () => {
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
-        </>
+        </Flex>
+
     )
 }
 

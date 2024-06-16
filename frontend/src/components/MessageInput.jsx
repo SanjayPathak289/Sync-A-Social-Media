@@ -68,7 +68,7 @@ const MessageInput = ({ setMessages }) => {
         <Flex gap={2} alignItems={"center"}>
             <form onSubmit={handleSendMessage} style={{ flex: 95 }}>
                 <InputGroup>
-                    <Input type='text' w={"full"} placeholder='Message' value={messageText} onChange={(e) => setMessageText(e.target.value)} />
+                    <Input type='text' w={"full"} placeholder='Message' value={messageText} onChange={(e) => setMessageText(e.target.value)} border={"1px solid rgba(0,0,0,0.2)"} />
                     <InputRightElement onClick={handleSendMessage} cursor={"pointer"}>
                         <IoSendSharp />
                     </InputRightElement>

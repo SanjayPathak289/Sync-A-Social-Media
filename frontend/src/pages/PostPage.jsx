@@ -22,7 +22,12 @@ const PostPage = () => {
     const currentUser = useRecoilValue(userAtom);
     const navigate = useNavigate();
     const currentPost = posts[0];
-
+    const copyURL = () => {
+        const currentURL = window.location.href;
+        navigator.clipboard.writeText(currentURL).then(() => {
+            showToast("Copied", "", "success");
+        })
+    }
     const handleDeletePost = async () => {
         try {
             const res = await fetch(`/api/posts/${currentPost._id}`, {
@@ -54,7 +59,7 @@ const PostPage = () => {
                 setPosts([data]);
             } catch (error) {
                 showToast("Error", error, "error");
-                setPost([])
+                setPosts([])
             }
             finally {
                 // setFetchingPosts(false);
@@ -145,18 +150,34 @@ const PostPage = () => {
                     <Image src={currentPost.img} w={"full"} />
                 </Box>
             )}
+            {currentPost.videoFile && (
+                <Box
+                    borderRadius={6}
+                    border={"1px solid"}
+                    borderColor={"gray.light"}
+                    style={{ position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden' }}
+                >
+                    <video
+                        src={currentPost.videoFile}
+                        controlsList="nodownload"
+                        controls
+                        allowFullScreen
+                        style={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            width: '100%',
+                            height: '100%',
+                            border: 'none',
+                            outline: "none"
+                        }}
+                    ></video>
+                </Box>
+            )}
             <Flex gap={3} my={3}>
                 <Actions post={currentPost} />
             </Flex>
-            <Divider my={4} />
-            <Flex justifyContent={"space-between"}>
-                <Flex gap={2} alignItems={"center"}>
-                    <Text fontSize={"2xl"}>👋</Text>
-                    <Text color={"gray.light"}>Get the app to like, reply and post.</Text>
-                </Flex>
-                <Button>Get</Button>
-            </Flex>
-            <Divider my={4} />
+            <Divider my={4} borderColor={"gray.700"} />
             {currentPost.replies.map(reply => (
                 <Comment
                     key={reply._id}

@@ -13,6 +13,9 @@ const postSchema = mongoose.Schema({
     img: {
         type: String,
     },
+    videoFile: {
+        type: String,
+    },
     likes: {
         type: [mongoose.Schema.Types.ObjectId],
         ref: "User",

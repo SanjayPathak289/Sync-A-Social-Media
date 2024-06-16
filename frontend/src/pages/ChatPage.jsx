@@ -132,7 +132,7 @@ const ChatPage = () => {
                     </Text>
                     <form onSubmit={handleSearch}>
                         <Flex alignItems={"center"} gap={2}>
-                            <Input type='text' placeholder='Search user' value={searchText} onChange={(e) => setSearchText(e.target.value)} />
+                            <Input type='text' placeholder='Search user' value={searchText} onChange={(e) => setSearchText(e.target.value)} border={"1px solid rgba(0,0,0,0.2)"} />
                             <Button size={"md"} onClick={handleSearch} isLoading={loading}><SearchIcon /></Button>
                         </Flex>
                     </form>

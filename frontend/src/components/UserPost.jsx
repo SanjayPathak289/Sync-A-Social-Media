@@ -82,6 +82,15 @@ const UserPost = ({ likes, replies, postImg, postTitle }) => {
                             <Image src={postImg} w={"full"} />
                         </Box>
                     )}
+                    {post.videoFile && (
+                        <Box
+                            borderRadius={6}
+                            overflow={"hidden"}
+                            border={"1px solid"}
+                            borderColor={"gray.light"}>
+                            <iframe src={post.videoFile} w={"full"} />
+                        </Box>
+                    )}
 
                     <Flex gap={3} my={1}>
                         <Actions liked={liked} setLiked={setLiked} />

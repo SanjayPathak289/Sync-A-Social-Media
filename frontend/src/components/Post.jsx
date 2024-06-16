@@ -182,6 +182,30 @@ const Post = ({ post, postedBy }) => {
                             <Image src={post.img} w={"full"} />
                         </Box>
                     )}
+                    {post.videoFile && (
+                        <Box
+                            borderRadius={6}
+                            border={"1px solid"}
+                            borderColor={"gray.light"}
+                            style={{ position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden' }}
+                        >
+                            <video
+                                src={post.videoFile}
+                                controlsList="nodownload"
+                                controls
+                                allowFullScreen
+                                style={{
+                                    position: 'absolute',
+                                    top: 0,
+                                    left: 0,
+                                    width: '100%',
+                                    height: '100%',
+                                    border: 'none',
+                                    outline: "none",
+                                }}
+                            ></video>
+                        </Box>
+                    )}
 
                     <Flex gap={3} my={1}>
                         <Actions post={post} />
@@ -191,7 +215,7 @@ const Post = ({ post, postedBy }) => {
 
 
             </Flex>
-        </Link>
+        </Link >
     )
 }
 

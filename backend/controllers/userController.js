@@ -207,5 +207,20 @@ const disableUser = async (req, res) => {
     }
 }
 
+const getFollowersFollowing = async (req, res) => {
+    const { username } = req.params;
+    try {
+        const user = await User.findOne({ username }).select("followers").select("following").populate({
+            path: "followers following",
+            select: "username profilePic name followers following"
+        });
+        if (!user || user.isDisable) {
+            return res.status(404).json({ error: "User not found!" });
+        }
 
-export { signupUser, loginUser, logoutUser, followUnfollowUser, updateUser, getUserProfile, getSuggestedUsers, disableUser };
+        return res.status(200).json(user);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
+export { signupUser, loginUser, logoutUser, followUnfollowUser, updateUser, getUserProfile, getSuggestedUsers, disableUser, getFollowersFollowing };

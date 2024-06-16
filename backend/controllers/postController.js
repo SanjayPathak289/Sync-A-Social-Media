@@ -1,10 +1,18 @@
 import User from "../model/userModel.js";
 import Post from "../model/postModel.js";
 import { v2 as cloudinary } from 'cloudinary';
+import formidable from "formidable";
+import parseForm from '../utils/helpers/parseForm.js';
 const createPost = async (req, res) => {
+
     try {
+        // const { fields, files } = await parseForm(req);
+        // const postedBy = fields.postedBy[0];
+        // const text = fields.text[0];
+        // let img = fields.img[0];
+        // let file = files.file ? files.file[0] : null;
         const { postedBy, text } = req.body;
-        let { img } = req.body;
+        let { img, videoFile } = req.body;
         if (!postedBy || !text) {
             return res.status(400).json({ error: "Please fill all the fields!" })
         }
@@ -19,12 +27,20 @@ const createPost = async (req, res) => {
         if (text.length > maxLength) {
             return res.status(400).json({ error: `Text must be less than ${maxLength}` });
         }
-        if (img) {
+        if (videoFile) {
+            const uploadedResponse = await cloudinary.uploader.upload(videoFile, {
+                resource_type: 'video'
+            });
+            videoFile = uploadedResponse.secure_url;
+            img = "";
+        }
+        if (!videoFile && img) {
             const uploadedResponse = await cloudinary.uploader.upload(img);
             img = uploadedResponse.secure_url;
+            videoFile = "";
         }
         const newPost = new Post({
-            postedBy, text, img
+            postedBy, text, img, videoFile
         });
         await newPost.save();
         return res.status(200).json(newPost);
@@ -40,7 +56,7 @@ const getPost = async (req, res) => {
         }
         res.status(200).json(post);
     } catch (error) {
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ error: error.message });
     }
 }
 const deletePost = async (req, res) => {

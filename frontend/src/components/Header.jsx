@@ -8,6 +8,7 @@ import useLogout from "../hooks/useLogout";
 import { FiLogOut } from "react-icons/fi";
 import { BsFillChatQuoteFill } from "react-icons/bs";
 import { MdOutlineSettings } from "react-icons/md";
+import { TbSquareRoundedLetterSFilled } from "react-icons/tb";
 
 const Header = () => {
     const { colorMode, toggleColorMode } = useColorMode();
@@ -15,19 +16,13 @@ const Header = () => {
     const user = useRecoilValue(userAtom);
     const handleLogout = useLogout();
     return (
-        <Flex justifyContent={user ? "space-between" : "center"} mt={6} mb={12}>
+        <Flex justifyContent={user ? "space-between" : "center"} mt={6} mb={12} alignItems={"center"}>
             {user && (
                 <Link to="/">
                     <AiFillHome size={24} />
                 </Link>
             )}
-            <Image
-                cursor={"pointer"}
-                alt="Logo"
-                width={6}
-                src={colorMode === "dark" ? "/light-logo.svg" : "/dark-logo.svg"}
-                onClick={toggleColorMode}
-            />
+            <TbSquareRoundedLetterSFilled size={32} onClick={toggleColorMode} cursor={"pointer"} />
             {user && (
                 <Flex alignItems={"center"} gap={4}>
                     <Link to={`/${user.username}`}>
