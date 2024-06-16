@@ -15,6 +15,7 @@ import FollowQuery from "./components/FollowQuery";
 function App() {
   const user = useRecoilValue(userAtom);
   const { pathname } = useLocation();
+  console.log(user);
   return (
     <Box position={"relative"} w={"full"}>
       <Container maxW={pathname === '/' ? { "base": "620px", "md": "900px" } : "620px"}>
@@ -24,7 +25,16 @@ function App() {
           <Route path="/" element={user ? <HomePage /> : <Navigate to="/auth" />} />
           <Route path="/auth" element={!user ? <AuthPage /> : <Navigate to="/" />} />
           <Route path="/update" element={user ? <UpdateProfile /> : <Navigate to="/auth" />} />
-          <Route path="/:username" element={<UserPage />} />
+          <Route path='/:username' element={user ? (
+            <>
+              <UserPage />
+              <CreatePost isTop={false} />
+            </>
+          ) : (
+            <UserPage />
+          )
+          }
+          />
           <Route path="/:username/post/:pid" element={<PostPage />} />
           <Route path="/:username/:followQuery" element={<FollowQuery />} />
           <Route path="/chat" element={user ? <ChatPage /> : <Navigate to="/auth" />} />

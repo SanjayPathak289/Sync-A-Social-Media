@@ -1,10 +1,10 @@
 import { Flex, Box, FormControl, FormLabel, Input, InputGroup, HStack, InputRightElement, Stack, Button, Heading, Text, useColorModeValue, Link, useToast, } from '@chakra-ui/react';
 import { useState } from 'react';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import authScreenAtom from '../atoms/authAtom';
 import useShowToast from '../hooks/useShowToast';
-
+import userAtom from "../atoms/userAtom";
 export default function SignupCard() {
     const [showPassword, setShowPassword] = useState(false);
     const setAuthScreenState = useSetRecoilState(authScreenAtom);
@@ -16,7 +16,7 @@ export default function SignupCard() {
         email: "",
         password: ""
     })
-    const toast = useToast();
+    const setUser = useSetRecoilState(userAtom);
     const handleSignUp = async () => {
         setLoading(true);
         try {
@@ -33,7 +33,8 @@ export default function SignupCard() {
                 return;
             }
             localStorage.setItem("user", JSON.stringify(data));
-            setAuthScreenState(data);
+            showToast("Success", "Account Created Successfully!", "success");
+            setUser(data);
         } catch (error) {
             showToast("Error", error, "error");
         }

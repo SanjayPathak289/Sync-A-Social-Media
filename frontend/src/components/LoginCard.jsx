@@ -33,7 +33,6 @@ export default function SignupCard() {
             }
             localStorage.setItem("user", JSON.stringify(data));
             setUser(data);
-
         } catch (error) {
             showToast("Error", error, "error");
         }
