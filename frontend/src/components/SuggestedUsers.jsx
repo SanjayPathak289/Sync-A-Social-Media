@@ -28,9 +28,12 @@ const SuggestedUsers = () => {
     }, [showToast])
     return (
         <>
-            <Text mb={4} fontWeight={"bold"}>
-                Suggested Users
-            </Text>
+
+            {suggestedUsers.length > 0 && (
+                <Text mb={4} fontWeight={"bold"}>
+                    Suggested Users
+                </Text>
+            )}
             <Flex direction={"column"} gap={4}>
                 {loading && (
                     [1, 2, 3, 4, 5].map((_, i) => (
