@@ -21,5 +21,5 @@ JWT_SECRET=...
 ## Run Build Command (in ROOT folder)
 npm run build
 
-## Start the app
+## Start the app (in ROOT folder)
 npm start
