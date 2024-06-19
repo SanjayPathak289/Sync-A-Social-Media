@@ -2,7 +2,7 @@
 SYNC - A Social Media Platform  
 Designed an engaging news feed for posting text, images, videos. Enabled content sharing, liking, and replying and following functionalities.  
 Implemented secure user authentication and customizable user profiles.  
-Created a private messaging system for seamless user-to-user communication.
+Created a private messaging system for seamless user-to-user communication via text and images.
 Implemented search and filtering options for finding users.  
 
 # Hosted Link  
