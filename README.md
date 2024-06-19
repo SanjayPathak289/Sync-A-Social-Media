@@ -23,3 +23,5 @@ npm run build
 
 ## Start the app (in ROOT folder)
 npm start
+
+## Go to http://localhost:3000/
