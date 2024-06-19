@@ -85,12 +85,13 @@ const PostPage = () => {
                         src={user?.profilePic}
                         size={"md"}
                         name={user?.name}
+                        cursor={"pointer"}
                         onClick={() => {
                             navigate(`/${user.username}`)
                         }}
                     />
                     <Flex>
-                        <Text fontSize={"sm"} fontWeight={"bold"} onClick={() => {
+                        <Text fontSize={"sm"} fontWeight={"bold"} cursor={"pointer"} onClick={() => {
                             navigate(`/${user.username}`)
                         }}>{user?.username}</Text>
                         <Image src="/verified.png" w={4} h={4} ml={4} />
@@ -138,7 +139,7 @@ const PostPage = () => {
                             <BsThreeDots cursor={"pointer"} />
                         </MenuButton>
                         <Portal>
-                            <MenuList bg={"gray.dark"}>
+                            <MenuList bg={"gray.dark"} color={"white"}>
                                 <MenuItem bg={"gray.dark"} onClick={(e) => copyURL(e)}>Copy link</MenuItem>
                             </MenuList>
                         </Portal>
