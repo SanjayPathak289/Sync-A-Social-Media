@@ -85,9 +85,14 @@ const PostPage = () => {
                         src={user?.profilePic}
                         size={"md"}
                         name={user?.name}
+                        onClick={() => {
+                            navigate(`/${user.username}`)
+                        }}
                     />
                     <Flex>
-                        <Text fontSize={"sm"} fontWeight={"bold"}>{user?.username}</Text>
+                        <Text fontSize={"sm"} fontWeight={"bold"} onClick={() => {
+                            navigate(`/${user.username}`)
+                        }}>{user?.username}</Text>
                         <Image src="/verified.png" w={4} h={4} ml={4} />
                     </Flex>
                 </Flex>

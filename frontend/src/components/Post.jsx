@@ -165,7 +165,7 @@ const Post = ({ post, postedBy }) => {
                                     <BsThreeDots cursor={"pointer"} />
                                 </MenuButton>
                                 <Portal>
-                                    <MenuList bg={"gray.dark"}>
+                                    <MenuList bg={"gray.dark"} color={"white"}>
                                         <MenuItem bg={"gray.dark"} onClick={(e) => copyURL(e)}>Copy link</MenuItem>
                                     </MenuList>
                                 </Portal>
